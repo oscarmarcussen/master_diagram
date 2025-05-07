@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" version="26.2.14">
   <diagram name="Page-1" id="e7e014a7-5840-1c2e-5031-d8a46d1fe8dd">
-    <mxGraphModel dx="784" dy="596" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
+    <mxGraphModel dx="998" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -19,10 +19,10 @@
         <mxCell id="oJ4jJjxVJxxPxz0Rxdeq-51" value="&lt;b&gt;5.&lt;/b&gt; Generate cloud resources" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="360" y="320" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="oJ4jJjxVJxxPxz0Rxdeq-54" value="&lt;b&gt;7.&lt;/b&gt;&amp;nbsp;Set environment secrets and variables" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="oJ4jJjxVJxxPxz0Rxdeq-54" value="&lt;b&gt;6.&lt;/b&gt;&amp;nbsp;Set environment secrets and variables" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="440" y="413" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="oJ4jJjxVJxxPxz0Rxdeq-56" value="&lt;b&gt;8. &lt;/b&gt;Initiate&amp;nbsp;CI/CD pipeline" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="oJ4jJjxVJxxPxz0Rxdeq-56" value="&lt;b&gt;7. &lt;/b&gt;Initiate&amp;nbsp;CI/CD pipeline" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="520" y="320" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="oJ4jJjxVJxxPxz0Rxdeq-58" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="oJ4jJjxVJxxPxz0Rxdeq-43" target="oJ4jJjxVJxxPxz0Rxdeq-44">
