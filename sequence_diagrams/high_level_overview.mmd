@@ -1,0 +1,38 @@
+sequenceDiagram
+    actor User
+    participant CLI
+    participant WE as WorkflowEngine
+    participant Setup
+    participant Repo as Repository
+    participant Infra as Infrastructure
+    participant Config as CI/CD Configuration
+    
+    User->>CLI: deploy-fullstack
+    activate CLI
+    CLI->>WE: createFullstackWorkflow().execute()
+    activate WE
+    
+    WE->>Setup: Execute setup steps
+    activate Setup
+    Setup-->>WE: Setup complete
+    deactivate Setup
+    
+    WE->>Repo: Execute repository steps
+    activate Repo
+    Repo-->>WE: Repository configured
+    deactivate Repo
+    
+    WE->>Infra: Execute infrastructure steps
+    activate Infra
+    Infra-->>WE: Infrastructure provisioned
+    deactivate Infra
+    
+    WE->>Config: Execute configuration steps
+    activate Config
+    Config-->>WE: Deployment configured
+    deactivate Config
+    
+    WE-->>CLI: Workflow completed
+    deactivate WE
+    CLI-->>User: Deployment successful
+    deactivate CLI

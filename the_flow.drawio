@@ -1,31 +1,31 @@
 <mxfile host="65bd71144e">
     <diagram id="Cr1rhuQCZY66u7uboeyu" name="Page-1">
-        <mxGraphModel dx="655" dy="691" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="737" dy="691" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="2" value="&lt;b&gt;2. &lt;/b&gt;Clone/generate template-repo" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="2" value="&lt;b&gt;2. Input collection&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="200" y="413" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="3" value="&lt;b&gt;1. &lt;/b&gt;Collect user input" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="3" value="&lt;b&gt;1. Initialization&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="120" y="320" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="&lt;b&gt;3.&lt;/b&gt;&amp;nbsp;Add, edit, move and generate necessary files" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="4" value="&lt;b&gt;3. Repository setup&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="280" y="320" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="&lt;b&gt;4. &lt;/b&gt;Init git and push files to remote" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="5" value="&lt;b&gt;4.&amp;nbsp;&lt;/b&gt;&lt;span class=&quot;notion-enable-hover&quot; data-token-index=&quot;0&quot; style=&quot;font-weight:600&quot;&gt;Infrastructure Configuration&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="360" y="413" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" value="&lt;b&gt;5.&lt;/b&gt; Generate cloud resources" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="6" value="&lt;b&gt;5.&amp;nbsp;&lt;/b&gt;&lt;span class=&quot;notion-enable-hover&quot; data-token-index=&quot;0&quot; style=&quot;font-weight:600&quot;&gt;Repository Initialization&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="440" y="320" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="&lt;b&gt;6.&lt;/b&gt;&amp;nbsp;Set environment secrets and variables" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="7" value="&lt;b&gt;6.&lt;/b&gt;&amp;nbsp;&lt;span class=&quot;notion-enable-hover&quot; data-token-index=&quot;0&quot; style=&quot;font-weight:600&quot;&gt;Resource Provisioning&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="520" y="413" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="9" target="18" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="9" value="&lt;b&gt;7. &lt;/b&gt;Run CI/CD pipeline" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="9" value="&lt;b&gt;7.&amp;nbsp;&lt;/b&gt;&lt;span class=&quot;notion-enable-hover&quot; data-token-index=&quot;0&quot; style=&quot;font-weight:600&quot;&gt;CI/CD Configuration&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="600" y="320" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1">

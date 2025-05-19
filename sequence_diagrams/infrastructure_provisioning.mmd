@@ -1,0 +1,80 @@
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant TF as TerraformCli
+    participant Utils
+    actor User
+    participant Git as GitCli
+    
+    box Remote Services
+    participant TFExec as Terraform<br>Executable
+    participant CSPAPI as CSP API<br>(GCP/Vercel)
+    participant GHAPI as GitHub API
+    end
+    
+    WE->>Utils: changeDirectory(terraform)
+    Utils-->>WE: directory changed
+    
+    WE->>TF: init()
+    activate TF
+    TF->>TFExec: terraform init
+    TFExec-->>TF: Terraform initialized
+    TF-->>WE: Terraform initialization complete
+    deactivate TF
+    
+    WE->>TF: apply(cspModule)
+    activate TF
+    TF->>TFExec: terraform apply -target=module.csp
+    TFExec->>CSPAPI: provision resources
+    CSPAPI-->>TFExec: resources provisioned
+    TFExec-->>TF: CSP resources created
+    TF-->>WE: CSP infrastructure provisioned
+    deactivate TF
+    
+    alt multiEnv
+        WE->>Utils: changeDirectory(terraform)
+        Utils-->>WE: directory changed
+        
+        WE->>TF: getOutput("csp_deployment_urls")
+        TF->>TFExec: terraform output
+        TFExec-->>TF: deployment URLs
+        TF-->>WE: deployment URLs retrieved
+        
+        WE->>User: prompt for webhook secrets
+        User-->>WE: enter webhook secrets
+        
+        WE->>TF: setEnvironmentVariable(terraformVars, "production", "WEBHOOK_SECRET")
+        TF-->>WE: production webhook secret set
+        
+        WE->>TF: setEnvironmentVariable(terraformVars, "staging", "WEBHOOK_SECRET")
+        TF-->>WE: staging webhook secret set
+    else
+        WE->>TF: getOutput("csp_deployment_url")
+        TF->>TFExec: terraform output
+        TFExec-->>TF: deployment URL
+        TF-->>WE: deployment URL retrieved
+        
+        WE->>User: prompt for webhook secret
+        User-->>WE: enter webhook secret
+        
+        WE->>TF: setEnvironmentVariable(terraformVars, "production", "WEBHOOK_SECRET")
+        TF-->>WE: webhook secret set
+    end
+    
+    WE->>Utils: writeJsonFile("terraform.tfvars.json", terraformVars)
+    Utils-->>WE: terraform variables updated
+    
+    WE->>Git: syncWithRemote("add webhook secrets")
+    Git->>GHAPI: push changes
+    GHAPI-->>Git: changes pushed
+    Git-->>WE: changes synchronized
+    
+    WE->>TF: apply()
+    activate TF
+    TF->>TFExec: terraform apply
+    TFExec->>CSPAPI: update resources
+    CSPAPI-->>TFExec: resources updated
+    TFExec->>GHAPI: configure CI/CD
+    GHAPI-->>TFExec: CI/CD configured
+    TFExec-->>TF: infrastructure provisioned
+    TF-->>WE: Full infrastructure provisioned
+    deactivate TF

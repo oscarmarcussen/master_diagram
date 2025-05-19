@@ -1,0 +1,50 @@
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant GH as GitHubCli
+    participant Git as GitCli
+    participant Utils
+    
+    box Remote Services
+    participant GHAPI as GitHub API
+    participant Template as Template<br>Repository
+    end
+    
+    WE->>GH: cloneAndDetachRepo()
+    activate GH
+    GH->>GHAPI: cloneRepo()
+    GHAPI->>Template: fetch template
+    Template-->>GHAPI: template content
+    GHAPI-->>GH: template repository cloned
+    GH->>Utils: copyFile(template, projectName, {excludeGit: true})
+    Utils-->>GH: template content copied
+    GH->>Utils: removeRecursive(tempDir)
+    Utils-->>GH: temporary directory removed
+    GH-->>WE: Template cloned and prepared
+    deactivate GH
+    
+    WE->>Utils: changeDirectory(projectName)
+    Utils-->>WE: directory changed
+    
+    WE->>Utils: makeDirectory([".github", "workflows"])
+    Utils-->>WE: directories created
+    
+    WE->>Git: initRepository()
+    activate Git
+    Git-->>WE: Git repository initialized
+    deactivate Git
+    
+    WE->>GH: createRepoAndSetOrigin()
+    activate GH
+    GH->>GHAPI: create repository
+    GHAPI-->>GH: repository created
+    GH-->>WE: Remote repository set as origin
+    deactivate GH
+    
+    WE->>Git: syncWithRemote()
+    activate Git
+    Git->>Git: stageAllFiles()
+    Git->>Git: commitChanges()
+    Git->>GHAPI: pushChanges()
+    GHAPI-->>Git: changes pushed
+    Git-->>WE: Repository synchronized
+    deactivate Git
