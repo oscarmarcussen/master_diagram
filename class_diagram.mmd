@@ -1,0 +1,74 @@
+---
+config:
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+direction TB
+    class WorkflowEngine {
+    }
+    class WorkflowStep {
+    }
+    class WorkflowContext {
+    }
+    class Utils {
+    }
+    class SuperCli {
+    }
+    class EnvVarManager {
+    }
+    class CSPManager {
+    }
+    class CSPInterface {
+    }
+    class GitCli {
+    }
+    class GitHubCli {
+    }
+    class TerraformCli {
+    }
+    class GcloudCli {
+    }
+    class VercelCli {
+    }
+    class NpxCli {
+    }
+    class CSPInputValues {
+    }
+    class TerraformVars {
+    }
+
+	<<singleton>> WorkflowEngine
+	<<interface>> WorkflowStep
+	<<interface>> WorkflowContext
+	<<utility>> Utils
+	<<abstract>> SuperCli
+	<<singleton>> EnvVarManager
+	<<singleton>> CSPManager
+	<<interface>> CSPInterface
+	<<singleton>> GitCli
+	<<singleton>> GitHubCli
+	<<singleton>> TerraformCli
+	<<singleton>> GcloudCli
+	<<singleton>> VercelCli
+	<<singleton>> NpxCli
+	<<interface>> CSPInputValues
+	<<interface>> TerraformVars
+
+    WorkflowEngine --> WorkflowStep : contains
+    WorkflowEngine --> WorkflowContext : manages
+    WorkflowStep --> WorkflowContext : uses
+    SuperCli <|-- GitCli : extends
+    SuperCli <|-- GitHubCli : extends
+    SuperCli <|-- TerraformCli : extends
+    SuperCli <|-- NpxCli : extends
+    SuperCli <|-- GcloudCli : extends
+    SuperCli <|-- VercelCli : extends
+    CSPInterface <|.. GcloudCli : implements
+    CSPInterface <|.. VercelCli : implements
+    CSPManager --> GcloudCli : manages
+    CSPManager --> VercelCli : manages
+    CSPManager --> CSPInterface : uses
+    TerraformCli --> TerraformVars : creates
+    CSPManager --> CSPInputValues : manages
