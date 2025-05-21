@@ -1,0 +1,62 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    actor User
+    participant WE as WorkflowEngine
+    participant TF as TerraformCli
+    participant Utils
+    participant Git as GitCli
+    
+    box Remote Services
+    participant TFExec as Terraform<br>Executable
+    participant GHAPI as GitHub API
+    end
+    
+    rect rgb(230, 210, 255)
+    note right of User: Step 10: configureWebhooks
+    WE->>TF: getOutput("csp_deployment_urls")
+    activate TF
+    TF->>TFExec: terraform output
+    activate TFExec
+    TFExec-->>TF: deployment URLs
+    deactivate TFExec
+    TF-->>WE: deployment URLs retrieved
+    deactivate TF
+    
+    WE->>User: prompt for webhook secret (production)
+    User-->>WE: enter webhook secret (production)
+
+    alt multiEnv
+        WE->>User: prompt for webhook secret (staging)
+        User-->>WE: enter webhook secret (staging)
+        
+        WE->>TF: setEnvironmentVariable(*params for staging*)
+        activate TF
+        TF-->>WE: staging webhook secret set
+        deactivate TF
+    end
+
+    WE->>TF: setEnvironmentVariable(*params for prod*)
+    activate TF
+    TF-->>WE: production webhook secret set
+    deactivate TF
+    
+    WE->>Utils: writeJsonFile("terraform.tfvars.json", terraformVars)
+    activate Utils
+    Utils-->>WE: terraform variables updated
+    deactivate Utils
+    
+    WE->>Git: syncWithRemote("add webhook secrets")
+    activate Git
+    Git->>GHAPI: push changes
+    activate GHAPI
+    GHAPI-->>Git: changes pushed
+    deactivate GHAPI
+    Git-->>WE: changes synchronized
+    deactivate Git
+    end
+    
+   

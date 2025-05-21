@@ -1,3 +1,8 @@
+---
+config:
+  theme: default
+  look: classic
+---
 sequenceDiagram
     participant WE as WorkflowEngine
     participant GH as GitHubCli
@@ -9,24 +14,36 @@ sequenceDiagram
     participant Template as Template<br>Repository
     end
     
+    rect rgb(255, 250, 205)
+    note right of WE: Step 5: cloneFullstackRepository
     WE->>GH: cloneAndDetachRepo()
     activate GH
     GH->>GHAPI: cloneRepo()
+    activate GHAPI
     GHAPI->>Template: fetch template
+    activate Template
     Template-->>GHAPI: template content
+    deactivate Template
     GHAPI-->>GH: template repository cloned
+    deactivate GHAPI
     GH->>Utils: copyFile(template, projectName, {excludeGit: true})
+    activate Utils
     Utils-->>GH: template content copied
     GH->>Utils: removeRecursive(tempDir)
     Utils-->>GH: temporary directory removed
+    deactivate Utils
     GH-->>WE: Template cloned and prepared
     deactivate GH
+    end
     
+    rect rgb(191, 223, 255)
+    note right of WE: Step 7: initRepository
     WE->>Utils: changeDirectory(projectName)
+    activate Utils
     Utils-->>WE: directory changed
-    
     WE->>Utils: makeDirectory([".github", "workflows"])
     Utils-->>WE: directories created
+    deactivate Utils
     
     WE->>Git: initRepository()
     activate Git
@@ -36,15 +53,23 @@ sequenceDiagram
     WE->>GH: createRepoAndSetOrigin()
     activate GH
     GH->>GHAPI: create repository
+    activate GHAPI
     GHAPI-->>GH: repository created
+    deactivate GHAPI
     GH-->>WE: Remote repository set as origin
     deactivate GH
+    end
     
+    rect rgb(200, 255, 200)
+    note right of WE: Step 8: syncWithRemote
     WE->>Git: syncWithRemote()
     activate Git
     Git->>Git: stageAllFiles()
     Git->>Git: commitChanges()
     Git->>GHAPI: pushChanges()
+    activate GHAPI
     GHAPI-->>Git: changes pushed
+    deactivate GHAPI
     Git-->>WE: Repository synchronized
     deactivate Git
+    end

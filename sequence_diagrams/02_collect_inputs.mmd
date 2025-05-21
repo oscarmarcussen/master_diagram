@@ -1,37 +1,17 @@
+---
+config:
+  theme: default
+  look: classic
+---
 sequenceDiagram
     actor User
     participant WE as WorkflowEngine
-    participant SC as SuperCli
     participant GH as GitHubCli
     participant CSP as CSPManager
     participant EVM as EnvVarManager
-    
-    box Remote Services
-    participant GHAPI as GitHub API
-    participant CSPAPI as CSP API<br>(GCP/Vercel)
-    end
-    
-    WE->>SC: initialize()
-    SC-->>WE: CLI tools initialized
-    
-    WE->>GH: confirmAccountSetup()
-    activate GH
-    GH->>GHAPI: fetchLoggedInUser()
-    GHAPI-->>GH: user details
-    GH->>GHAPI: fetchOrganizationNames()
-    GHAPI-->>GH: organization list
-    GH-->>WE: GitHub account confirmed
-    deactivate GH
-    
-    WE->>CSP: selectCSP()
-    activate CSP
-    CSP->>User: prompt for CSP selection
-    User-->>CSP: select CSP (GCP/Vercel)
-    CSP->>CSPAPI: confirmAccountSetup()
-    CSPAPI-->>CSP: account details
-    CSP-->>WE: CSP selected and confirmed
-    deactivate CSP
-    
+
+    rect rgb(255, 223, 191)
+    note right of User: Step 3: collectUserInputs
     WE->>GH: setInputs()
     activate GH
     GH->>User: prompt for project name
@@ -47,7 +27,10 @@ sequenceDiagram
     User-->>CSP: enter CSP inputs
     CSP-->>WE: CSP inputs collected
     deactivate CSP
+    end
     
+    rect rgb(230, 210, 255)
+    note right of User: Step 4: setupEnvironmentVariables
     WE->>EVM: collectEnvVars()
     activate EVM
     EVM->>User: prompt for multiple environments
@@ -64,3 +47,5 @@ sequenceDiagram
     
     EVM-->>WE: Environment variables collected
     deactivate EVM
+    end
+    

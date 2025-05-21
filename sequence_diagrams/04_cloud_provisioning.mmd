@@ -1,3 +1,8 @@
+---
+config:
+  theme: default
+  look: classic
+---
 sequenceDiagram
     participant WE as WorkflowEngine
     participant CSPM as CSPManager
@@ -9,8 +14,16 @@ sequenceDiagram
     participant TFExec as Terraform<br>Executable
     end
     
-    WE->>CSPM: getSelectedCSPType()
-    CSPM-->>WE: selected CSP type
+    rect rgb(255, 223, 191)
+    note right of WE: Step 9: runTerraformOnlyCSP
+    WE->>TF: init()
+    activate TF
+    TF->>TFExec: terraform init
+    activate TFExec
+    TFExec-->>TF: Terraform initialized
+    deactivate TFExec
+    TF-->>WE: Terraform initialization complete
+    deactivate TF
     
     alt GCP Selected
         WE->>TF: apply("gcp")
@@ -59,4 +72,5 @@ sequenceDiagram
         deactivate TFExec
         TF-->>WE: Vercel infrastructure provisioned
         deactivate TF
+    end
     end
