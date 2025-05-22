@@ -1,5 +1,7 @@
 ---
 config:
+  theme: default
+  look: classic
   layout: elk
   class:
     hideEmptyMembersBox: true
@@ -20,6 +22,8 @@ direction TB
     }
     class CSPManager {
     }
+    class CSPRegistry {
+    }
     class CSPInterface {
     }
     class GitCli {
@@ -32,6 +36,8 @@ direction TB
     }
     class VercelCli {
     }
+    class AzureCli {
+    }
     class NpxCli {
     }
     class CSPInputValues {
@@ -40,21 +46,23 @@ direction TB
     }
 
 	<<singleton>> WorkflowEngine
-	<<interface>> WorkflowStep
-	<<interface>> WorkflowContext
+	<<type>> WorkflowStep
+	<<type>> WorkflowContext
 	<<utility>> Utils
 	<<abstract>> SuperCli
 	<<singleton>> EnvVarManager
 	<<singleton>> CSPManager
+  <<singleton>> CSPRegistry
 	<<interface>> CSPInterface
 	<<singleton>> GitCli
 	<<singleton>> GitHubCli
 	<<singleton>> TerraformCli
 	<<singleton>> GcloudCli
 	<<singleton>> VercelCli
+  <<singleton>> AzureCli
 	<<singleton>> NpxCli
-	<<interface>> CSPInputValues
-	<<interface>> TerraformVars
+	<<type>> CSPInputValues
+	<<type>> TerraformVars
 
     WorkflowEngine --> WorkflowStep : contains
     WorkflowEngine --> WorkflowContext : manages
@@ -65,10 +73,13 @@ direction TB
     SuperCli <|-- NpxCli : extends
     SuperCli <|-- GcloudCli : extends
     SuperCli <|-- VercelCli : extends
+    SuperCli <|-- AzureCli : extends
     CSPInterface <|.. GcloudCli : implements
     CSPInterface <|.. VercelCli : implements
-    CSPManager --> GcloudCli : manages
-    CSPManager --> VercelCli : manages
+    CSPInterface <|.. AzureCli : implements
+    CSPManager --> CSPRegistry : uses
+    CSPRegistry --> CSPInterface : manages
     CSPManager --> CSPInterface : uses
     TerraformCli --> TerraformVars : creates
     CSPManager --> CSPInputValues : manages
+    Utils --> EnvVarManager : uses
