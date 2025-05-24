@@ -1,0 +1,36 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    actor User
+    participant WE as WorkflowEngine
+    participant GH as GitHubCli
+    participant CSP as CSPManager
+
+    note right of User: Step 3: collectUserInputs
+    WE->>GH: setInputs()
+    activate GH
+    GH->>User: prompt for project name
+    User-->>GH: enter project name
+    alt user is part of at least one organization
+        GH-->>User: prompt for wish to select organization
+        alt user wants to select organization
+            GH->>User: prompt for organization selection
+            User-->>GH: select organization
+        else user does not want to select organization
+            GH-->>User: skip organization selection
+        end
+    end
+
+    GH-->>WE: GitHub inputs collected
+    deactivate GH
+    
+    WE->>CSP: collectInputs()
+    activate CSP
+    CSP->>User: prompt for CSP-specific inputs
+    User-->>CSP: enter CSP inputs
+    CSP-->>WE: CSP inputs collected
+    deactivate CSP
+    

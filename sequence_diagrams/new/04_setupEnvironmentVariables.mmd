@@ -1,0 +1,35 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant EVM as EnvVarManager
+    actor User
+    participant TF as TerraformCli
+    
+    note right of WE: Step 4: setupEnvironmentVariables
+    WE->>EVM: collectEnvVars()
+    activate EVM
+    EVM->>User: prompt for multiple environments
+    User-->>EVM: select environment option
+    EVM->>User: prompt for common environment variables
+    User-->>EVM: enter common variables
+    
+    alt Multiple Environments
+        EVM->>User: prompt for staging environment variables
+        User-->>EVM: enter staging variables
+        EVM->>User: prompt for production environment variables
+        User-->>EVM: enter production variables
+    end
+    
+    EVM-->>WE: Environment variables collected
+    deactivate EVM
+
+    WE->>TF: prepareTerraformVars(*context*)
+    activate TF
+    TF-->>WE: formatted terraform variables
+    deactivate TF
+
+    

@@ -1,0 +1,43 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant Context as WorkflowContext
+    participant CLI as CLI Tools<br>(GitHubCli, GitCli, TerraformCli)
+    participant CSPMgr as CSPManager
+    participant EnvMgr as EnvVarManager
+
+    note right of WE: Step 1: setupCliTools
+    loop For each CLI tool (gh, git, terraform)
+        WE->>CLI: getInstance()
+        activate CLI
+        note over CLI: Singleton Pattern
+        CLI->>CLI: new CliInstance() (if not exists)
+        CLI->>CLI: isCliInstalled()
+        alt CLI installed
+            CLI-->>WE: CLI instance
+            WE->>Context: set cliInstance = instance
+        else CLI not found
+            CLI-->>WE: error
+        end
+        deactivate CLI
+    end
+
+    WE->>CSPMgr: getInstance()
+    activate CSPMgr
+    note over CSPMgr: Singleton Pattern
+    CSPMgr->>CSPMgr: new CSPManager() (if not exists)
+    CSPMgr-->>WE: CSPManager instance
+    deactivate CSPMgr
+    WE->>Context: set cspManager = instance
+
+    WE->>EnvMgr: getInstance()
+    activate EnvMgr
+    note over EnvMgr: Singleton Pattern
+    EnvMgr->>EnvMgr: new EnvVarManager() (if not exists)
+    EnvMgr-->>WE: EnvVarManager instance
+    deactivate EnvMgr
+    WE->>Context: set envVarManager = instance

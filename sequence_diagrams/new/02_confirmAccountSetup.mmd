@@ -1,0 +1,62 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    actor User
+    participant WE as WorkflowEngine
+    participant GH as GitHubCli
+    participant CSP as CSPManager
+    participant Registry as CSPRegistry
+    participant Provider as CSP Provider
+    
+    box Remote Services
+    participant GHAPI as GitHub API
+    participant CSPAPI as CSP API
+    end
+
+    note right of User: Step 2: confirmAccountSetup
+    
+    WE->>GH: confirmAccountSetup()
+    activate GH
+    GH->>GHAPI: fetch account details
+    activate GHAPI
+    GHAPI-->>GH: account details (username, organizations)
+    deactivate GHAPI
+    GH-->>WE: GitHub account confirmed
+    deactivate GH
+    
+    WE->>CSP: selectCSP()
+    activate CSP
+    CSP->>Registry: getRegisteredProviders()
+    activate Registry
+    Registry-->>CSP: provider choices (GCP, Vercel, Azure)
+    deactivate Registry
+    CSP->>User: prompt for CSP selection
+    User-->>CSP: select CSP (e.g., "gcp")
+    CSP->>Registry: getProvider("gcp")
+    activate Registry
+    Registry->>Provider: getInstance()
+    activate Provider
+    note over Provider: Singleton Pattern + CLI validation
+    Provider->>Provider: initialize() & validate CLI
+    Provider-->>Registry: provider instance
+    deactivate Provider
+    Registry-->>CSP: CSP provider instance
+    deactivate Registry
+    CSP-->>WE: CSP selected
+    deactivate CSP
+    
+    WE->>CSP: confirmAccountSetup()
+    activate CSP
+    CSP->>Provider: confirmAccountSetup()
+    activate Provider
+    Provider->>CSPAPI: fetch account details<br>(e.g. username, organizations, billing)
+    activate CSPAPI
+    CSPAPI-->>Provider: account details
+    deactivate CSPAPI
+    Provider-->>CSP: account confirmed
+    deactivate Provider
+    CSP-->>WE: CSP account confirmed
+    deactivate CSP

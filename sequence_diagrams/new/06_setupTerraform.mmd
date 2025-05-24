@@ -1,0 +1,50 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant TF as TerraformCli
+    participant GH as GitHubCli
+    participant Utils
+    
+    box Remote Services
+    participant GHAPI as GitHub API
+    end
+    
+    note right of WE: Step 6: setupTerraform
+    WE->>TF: setupTerraformFiles(projectName, terraformVars)
+    activate TF
+    
+    TF->>GH: cloneRepo(repoOwner, repoName, tempDir)
+    activate GH
+    GH->>GHAPI: clone repo
+    activate GHAPI
+    GHAPI-->>GH: repository cloned
+    deactivate GHAPI
+    GH-->>TF: terraform repo cloned to tempDir
+    deactivate GH
+    
+    TF->>Utils: copyFile(tempDir/terraform, projectName)
+    activate Utils
+    Utils-->>TF: terraform files copied to project
+    deactivate Utils
+    
+    TF->>Utils: removeRecursive(tempDir)
+    activate Utils
+    Utils-->>TF: temporary directory removed
+    deactivate Utils
+    
+    TF->>Utils: writeJsonFile(*path*, terraformVars)
+    activate Utils
+    Utils-->>TF: terraform variables written
+    deactivate Utils
+    
+    TF->>Utils: appendLinesToFile(projectName/.gitignore, gitignoreLines)
+    activate Utils
+    Utils-->>TF: gitignore updated
+    deactivate Utils
+    
+    TF-->>WE: terraform setup complete
+    deactivate TF

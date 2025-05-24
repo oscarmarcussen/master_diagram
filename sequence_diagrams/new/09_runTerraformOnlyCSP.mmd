@@ -1,0 +1,76 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant TF as TerraformCli
+    
+    box Remote Services
+    participant GCPCloud as Google Cloud<br>Platform
+    participant AzureCloud as Microsoft<br>Azure
+    participant TFExec as Terraform<br>Executable
+    end
+    
+    note right of WE: Step 9: runTerraformOnlyCSP
+    WE->>TF: init()
+    activate TF
+    TF->>TFExec: terraform init
+    activate TFExec
+    TFExec-->>TF: Terraform initialized
+    deactivate TFExec
+    TF-->>WE: Terraform initialization complete
+    deactivate TF
+    
+    alt GCP Selected
+        WE->>TF: apply("gcp")
+        activate TF
+        TF->>TFExec: terraform apply -target=module.gcp
+        activate TFExec
+        
+        TFExec->>GCPCloud: create project & enable APIs
+        GCPCloud-->>TFExec: project & APIs configured
+        
+        TFExec->>GCPCloud: setup IAM & Workload Identity Federation
+        GCPCloud-->>TFExec: authentication configured
+        
+        TFExec->>GCPCloud: create Cloud Run service
+        GCPCloud-->>TFExec: container service created
+        
+        alt Create Managed Database
+            TFExec->>GCPCloud: create CloudSQL instance
+            GCPCloud-->>TFExec: database instance created
+        end
+        
+        TFExec-->>TF: GCP resources provisioned
+        deactivate TFExec
+        TF-->>WE: GCP infrastructure provisioned
+        deactivate TF
+        
+    else Azure Selected
+        WE->>TF: apply("azure")
+        activate TF
+        TF->>TFExec: terraform apply -target=module.azure
+        activate TFExec
+        
+        TFExec->>AzureCloud: create resource group & container registry
+        AzureCloud-->>TFExec: resource group & registry created
+        
+        TFExec->>AzureCloud: setup service principal & OIDC federation
+        AzureCloud-->>TFExec: authentication configured
+        
+        TFExec->>AzureCloud: create Container Apps environment & service
+        AzureCloud-->>TFExec: container service created
+        
+        alt Create Managed Database
+            TFExec->>AzureCloud: create PostgreSQL Flexible Server
+            AzureCloud-->>TFExec: database instance created
+        end
+        
+        TFExec-->>TF: Azure resources provisioned
+        deactivate TFExec
+        TF-->>WE: Azure infrastructure provisioned
+        deactivate TF
+
+    end
