@@ -1,0 +1,46 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant GH as GitHubCli
+    participant CSP as CSPManager
+    participant Provider as CSP Provider
+    
+    box Remote Services
+    participant GHAPI as GitHub API
+    participant CSPAPI as CSP API
+    end
+
+    note right of WE: Step 2: verifyAccountAccess
+    
+    WE->>GH: verifyAccountSetup()
+    activate GH
+    break User not authenticated
+      GH-->>WE: error (not authenticated)
+    end
+    GH->>GHAPI: fetch account details
+    activate GHAPI
+    GHAPI-->>GH: account details<br>(e.g. username, organizations)
+    deactivate GHAPI
+    GH-->>WE: GitHub account confirmed
+    deactivate GH
+  
+    
+    WE->>CSP: verifyAccountSetup()
+    activate CSP
+    CSP->>Provider: verifyAccountSetup()
+    activate Provider
+    break User not authenticated
+      Provider-->>WE: error (not authenticated)
+    end
+    Provider->>CSPAPI: fetch account details<br>(e.g. username, organizations, billing)
+    activate CSPAPI
+    CSPAPI-->>Provider: account details
+    deactivate CSPAPI
+    Provider-->>CSP: account confirmed
+    deactivate Provider
+    CSP-->>WE: CSP account confirmed
+    deactivate CSP

@@ -15,7 +15,7 @@ sequenceDiagram
     end
     
     rect rgb(230, 210, 255)
-    note right of WE: Step 5: cloneFullstackRepository
+    note right of WE: Step 5: cloneFullstackTemplate
     WE->>GH: cloneAndDetachRepo()
     activate GH
     GH->>GHAPI: cloneRepo()
@@ -36,14 +36,12 @@ sequenceDiagram
     deactivate GH
     end
 
-    note right of WE: *Step 6: setupTerraform*
+    note right of WE: *Step 6: prepareInfraConfig*
     
     rect rgb(191, 223, 255)
-    note right of WE: Step 7: initRepository
-    WE->>Utils: changeDirectory(projectName)
+    note right of WE: Step 7: initVersionControl
+    WE->>Utils: makeDirectory(".github/workflows", { createGitkeep: true });
     activate Utils
-    Utils-->>WE: directory changed
-    WE->>Utils: makeDirectory([".github", "workflows"])
     Utils-->>WE: directories created
     deactivate Utils
     
@@ -64,13 +62,17 @@ sequenceDiagram
     
     rect rgb(200, 255, 200)
     note right of WE: Step 8: syncWithRemote
-    WE->>Git: syncWithRemote()
+    WE->>Git: syncWithRemote(*commit message*, {firstPush: true})
     activate Git
+    alt firstPush=false
+      Git->>GHAPI: pullChanges()
+      GHAPI-->>Git: remote changes pulled
+    end
     Git->>Git: stageAllFiles()
     Git->>Git: commitChanges()
     Git->>GHAPI: pushChanges()
     activate GHAPI
-    GHAPI-->>Git: changes pushed
+    GHAPI-->>Git: local changes pushed
     deactivate GHAPI
     Git-->>WE: Repository synchronized
     deactivate Git

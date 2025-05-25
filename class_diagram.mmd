@@ -24,7 +24,7 @@ direction TB
     }
     class CSPRegistry {
     }
-    class CSPInterface {
+    class CSP {
     }
     class GitCli {
     }
@@ -53,7 +53,7 @@ direction TB
 	<<singleton>> EnvVarManager
 	<<singleton>> CSPManager
   <<singleton>> CSPRegistry
-	<<interface>> CSPInterface
+	<<interface>> CSP
 	<<singleton>> GitCli
 	<<singleton>> GitHubCli
 	<<singleton>> TerraformCli
@@ -74,12 +74,12 @@ direction TB
     SuperCli <|-- GcloudCli : extends
     SuperCli <|-- VercelCli : extends
     SuperCli <|-- AzureCli : extends
-    CSPInterface <|.. GcloudCli : implements
-    CSPInterface <|.. VercelCli : implements
-    CSPInterface <|.. AzureCli : implements
+    CSP <|.. GcloudCli : implements
+    CSP <|.. VercelCli : implements
+    CSP <|.. AzureCli : implements
     CSPManager --> CSPRegistry : uses
-    CSPRegistry --> CSPInterface : manages
-    CSPManager --> CSPInterface : uses
+    CSPRegistry --> CSP : manages
+    CSPManager --> CSP : uses
     TerraformCli --> TerraformVars : creates
     CSPManager --> CSPInputValues : manages
     Utils --> EnvVarManager : uses

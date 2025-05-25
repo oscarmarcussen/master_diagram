@@ -13,7 +13,7 @@ sequenceDiagram
     participant TFExec as Terraform<br>Executable
     end
     
-    note right of WE: Step 9: runTerraformOnlyCSP
+    note right of WE: Step 9: provisionCloudInfra
     WE->>TF: init()
     activate TF
     TF->>TFExec: terraform init

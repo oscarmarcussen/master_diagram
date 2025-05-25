@@ -1,0 +1,34 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant CSP as CSPManager
+    actor User
+    participant Registry as CSPRegistry
+    participant Provider as CSP
+
+    note right of WE: step 1 cont'd: selectCSP
+    
+    WE->>CSP: selectCSP()
+    activate CSP
+    CSP->>Registry: getRegisteredProviders()
+    activate Registry
+    Registry-->>CSP: provider choices (GCP, Azure, Vercel)
+    deactivate Registry
+    CSP->>User: prompt for CSP selection
+    User-->>CSP: select CSP (e.g., "gcp")
+    CSP->>Registry: getProvider("gcp")
+    activate Registry
+    Registry->>Provider: getInstance()
+    activate Provider
+    note over Provider: Singleton Pattern + CLI validation
+    Provider->>Provider: initialize() & validate CLI
+    Provider-->>Registry: provider instance
+    deactivate Provider
+    Registry-->>CSP: CSP instance
+    deactivate Registry
+    CSP-->>WE: CSP selected
+    deactivate CSP
