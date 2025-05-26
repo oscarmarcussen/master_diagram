@@ -13,7 +13,7 @@ sequenceDiagram
     participant GHAPI as GitHub API
     end
 
-    note right of WE: Step 11: runTerraform
+    note right of WE: Step 11: establishCD
     WE->>TF: apply()
     activate TF
     TF->>TFExec: terraform apply
@@ -25,10 +25,10 @@ sequenceDiagram
     TFExec->>GHAPI: create secrets and variables
     activate GHAPI
     GHAPI-->>TFExec: secrets and variables created
-    TFExec->>GHAPI: create CI/CD pipeline
-    GHAPI-->>TFExec: CI/CD pipeline created
+    TFExec->>GHAPI: create CD pipeline
+    GHAPI-->>TFExec: CD pipeline created
     deactivate GHAPI
-    TFExec-->>TF: infrastructure provisioned
+    TFExec-->>TF: all infrastructure<br> and pipelines created
     deactivate TFExec
-    TF-->>WE: Full infrastructure provisioned
+    TF-->>WE: full infrastructure provisioned
     deactivate TF
