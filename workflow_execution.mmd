@@ -1,0 +1,27 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    actor User
+    participant CLI
+    participant WE as WorkflowEngine
+    participant WS as WorkflowStep
+    
+    User->>CLI: $ init
+    activate CLI
+    CLI->>CLI:createWorkflow()
+    CLI->>WE: execute()
+    activate WE
+
+    loop For each step
+        WE->>WS: execute()
+        activate WS
+        WS-->>WE: step completed
+        deactivate WS
+    end
+    WE-->>CLI: Workflow completed
+    deactivate WE
+    CLI-->>User: Workflow execution <br>finished
+    deactivate CLI

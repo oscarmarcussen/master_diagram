@@ -45,22 +45,10 @@ direction TB
     class TerraformVars {
     }
 
-	<<singleton>> WorkflowEngine
 	<<type>> WorkflowStep
 	<<type>> WorkflowContext
-	<<utility>> Utils
 	<<abstract>> SuperCli
-	<<singleton>> EnvVarManager
-	<<singleton>> CSPManager
-  <<singleton>> CSPRegistry
 	<<interface>> CSP
-	<<singleton>> GitCli
-	<<singleton>> GitHubCli
-	<<singleton>> TerraformCli
-	<<singleton>> GcloudCli
-	<<singleton>> VercelCli
-  <<singleton>> AzureCli
-	<<singleton>> NpxCli
 	<<type>> CSPInputValues
 	<<type>> TerraformVars
 

@@ -13,7 +13,6 @@ sequenceDiagram
     loop For each CLI tool
         WE->>CLI: getInstance()
         activate CLI
-        note over CLI: Singleton Pattern
         CLI->>CLI: new CliInstance()
         CLI->>CLI: isCliInstalled()
         break CLI not installed
@@ -25,14 +24,12 @@ sequenceDiagram
 
     WE->>EnvMgr: getInstance()
     activate EnvMgr
-    note over EnvMgr: Singleton Pattern
     EnvMgr->>EnvMgr: new EnvVarManager() 
     EnvMgr-->>WE: EnvVarManager instance
     deactivate EnvMgr
 
      WE->>CSPMgr: getInstance()
     activate CSPMgr
-    note over CSPMgr: Singleton Pattern
     CSPMgr->>CSPMgr: new CSPManager()
     CSPMgr-->>WE: CSPManager instance
     deactivate CSPMgr
