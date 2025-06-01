@@ -1,0 +1,73 @@
+---
+config:
+  theme: redux
+  look: classic
+  layout: elk
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+direction TB
+	namespace CoreOrchestrationLayer {
+        class WorkflowEngine {
+        }
+        class WorkflowStep {
+        }
+        class WorkflowContext {
+        }
+	}
+	namespace CloudProviderManagement {
+        class CSPManager {
+        }
+        class CSPRegistry {
+        }
+        class CSP {
+        }
+	}
+	namespace ServiceAbstractionLayer {
+        class SuperCli {
+        }
+        class AzureCli {
+        }
+        class GcloudCli {
+        }
+        class VercelCli {
+        }
+        class GitHubCli {
+        }
+        class TerraformCli {
+        }
+        class GitCli {
+        }
+        class NpxCli {
+        }
+	}
+	namespace UtilityLayer {
+        class Utils {
+        }
+	}
+	namespace EnvironmentVarConfig {
+        class EnvVarManager {
+        }
+	}
+	<<type>> WorkflowStep
+	<<type>> WorkflowContext
+	<<interface>> CSP
+	<<abstract>> SuperCli
+        WorkflowEngine --> "1..*" WorkflowStep : contains
+        WorkflowEngine --> WorkflowContext : manages
+        WorkflowStep --> WorkflowContext : uses
+        SuperCli <|-- GitCli : extends
+        SuperCli <|-- GitHubCli : extends
+        SuperCli <|-- TerraformCli : extends
+        SuperCli <|-- NpxCli : extends
+        SuperCli <|-- GcloudCli : extends
+        SuperCli <|-- VercelCli : extends
+        SuperCli <|-- AzureCli : extends
+        CSP <|.. GcloudCli : implements
+        CSP <|.. VercelCli : implements
+        CSP <|.. AzureCli : implements
+        CSPManager --> CSPRegistry : uses
+        CSPRegistry --> CSP : manages
+        CSPManager --> CSP : uses
+

@@ -4,22 +4,18 @@ config:
   look: classic
 ---
 sequenceDiagram
+    actor User
     participant CLI
     participant WE as WorkflowEngine
     participant WS as WorkflowStep
     
-    CLI->>CLI:createWorkflow()
-    CLI->>WE: execute(context)
+    User->>CLI: $ aboveit-cli deploy-fullstack
+    activate CLI
+    CLI->>CLI: createFullstackWorkflow()
+    CLI->>WE: execute()
     activate WE
 
     loop for each step
-        WE->>WS: check dependencies and conditions
-        rect rgb(250,128,114)
-        break dependencies or conditions<br> not met
-            WS-->>WE: error
-        end
-        end
-        WS-->>WE: dependencies and conditions met
         WE->>WS: execute()
         activate WS
         WS-->>WE: step completed
@@ -27,3 +23,5 @@ sequenceDiagram
     end
     WE-->>CLI: workflow completed
     deactivate WE
+    CLI-->>User: workflow execution completed -<br>deployment pipelines running
+    deactivate CLI

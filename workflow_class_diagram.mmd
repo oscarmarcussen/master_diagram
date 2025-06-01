@@ -1,0 +1,19 @@
+---
+config:
+  theme: default
+  look: classic
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+direction TB
+    class WorkflowEngine {
+    }
+    class WorkflowStep {
+    }
+    class WorkflowContext {
+    }
+
+    WorkflowEngine -->"1..*" WorkflowStep : contains
+    WorkflowEngine --> WorkflowContext : manages
+    WorkflowStep --> WorkflowContext : uses
