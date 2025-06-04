@@ -27,12 +27,6 @@ direction TB
 	namespace ServiceAbstractionLayer {
         class SuperCli {
         }
-        class AzureCli {
-        }
-        class GcloudCli {
-        }
-        class VercelCli {
-        }
         class GitHubCli {
         }
         class TerraformCli {
@@ -40,6 +34,10 @@ direction TB
         class GitCli {
         }
         class NpxCli {
+        }
+        class AzureCli {
+        }
+        class GcloudCli {
         }
 	}
 	namespace UtilityLayer {
@@ -62,10 +60,8 @@ direction TB
         SuperCli <|-- TerraformCli : extends
         SuperCli <|-- NpxCli : extends
         SuperCli <|-- GcloudCli : extends
-        SuperCli <|-- VercelCli : extends
         SuperCli <|-- AzureCli : extends
         CSP <|.. GcloudCli : implements
-        CSP <|.. VercelCli : implements
         CSP <|.. AzureCli : implements
         CSPManager --> CSPRegistry : uses
         CSPRegistry --> CSP : manages
