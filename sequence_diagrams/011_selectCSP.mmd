@@ -24,7 +24,6 @@ sequenceDiagram
     activate Registry
     Registry->>Provider: getInstance()
     activate Provider
-    note over Provider: Singleton Pattern + CLI validation
     Provider->>Provider: initialize() & validate CLI
     Provider-->>Registry: provider instance
     deactivate Provider
