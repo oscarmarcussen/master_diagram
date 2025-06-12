@@ -4,26 +4,19 @@ config:
   look: classic
 ---
 sequenceDiagram
-    participant CLI
     participant WE as WorkflowEngine
     participant WS as WorkflowStep
-    
-    CLI->>CLI:createWorkflow()
-    CLI->>WE: execute(context)
-    activate WE
 
     loop for each step
         WE->>WS: check dependencies and conditions
+        activate WS
         rect rgb(250,128,114)
         break dependencies or conditions<br> not met
             WS-->>WE: error
         end
         end
         WS-->>WE: dependencies and conditions met
-        WE->>WS: execute()
-        activate WS
+        WE->>WS: execute(context)
         WS-->>WE: step completed
         deactivate WS
     end
-    WE-->>CLI: workflow completed
-    deactivate WE
