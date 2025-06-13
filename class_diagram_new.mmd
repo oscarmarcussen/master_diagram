@@ -23,6 +23,10 @@ direction TB
         }
         class CSP {
         }
+        class AzureCli {
+        }
+        class GcloudCli {
+        }
 	}
 	namespace ServiceAbstractionLayer {
         class SuperCli {
@@ -35,18 +39,10 @@ direction TB
         }
         class NpxCli {
         }
-        class AzureCli {
-        }
-        class GcloudCli {
-        }
 	}
-	namespace UtilityLayer {
         class Utils {
-        }
 	}
-	namespace EnvironmentVarConfig {
         class EnvVarManager {
-        }
 	}
 	<<type>> WorkflowStep
 	<<type>> WorkflowContext
@@ -66,4 +62,9 @@ direction TB
         CSPManager --> CSPRegistry : uses
         CSPRegistry --> CSP : manages
         CSPManager --> CSP : uses
+
+        WorkflowContext --> CSPManager : contains
+        WorkflowContext --> "0..*" SuperCli : contains
+        WorkflowContext --> Utils : contains
+        WorkflowContext --> EnvVarManager : contains
 
