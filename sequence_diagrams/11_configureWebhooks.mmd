@@ -14,7 +14,7 @@ sequenceDiagram
     end
     
     note right of User: Step 11: configureWebhooks
-    WE->>TF: getOutput("csp_deployment_urls")
+    WE->>TF: getOutput("csp_deployment_urls", "infrastructure")
     activate TF
     TF->>TFExec: terraform output
     activate TFExec
@@ -23,27 +23,42 @@ sequenceDiagram
     TF-->>WE: deployment URLs retrieved
     deactivate TF
     
-    WE->>User: prompt for webhook secret (production)
-    User-->>WE: enter webhook secret (production)
-
     alt multiEnv
-        WE->>User: prompt for webhook secret (staging)
-        User-->>WE: enter webhook secret (staging)
+        WE->>User: display production & staging endpoints<br>with setup instructions
+        WE->>User: prompt for webhook secret (PRODUCTION)
+        User-->>WE: enter production webhook secret
         
-        WE->>TF: setEnvironmentVariable(*params for staging*)
+        WE->>User: prompt for webhook secret (STAGING)
+        User-->>WE: enter staging webhook secret
+        
+        WE->>TF: setEnvironmentVariable(*production params*)
+        activate TF
+        TF-->>WE: production webhook secret set
+        deactivate TF
+        
+        WE->>TF: setEnvironmentVariable(*staging params*)
         activate TF
         TF-->>WE: staging webhook secret set
         deactivate TF
+        
+    else single environment
+        WE->>User: display single endpoint with setup instructions
+        WE->>User: prompt for webhook secret
+        User-->>WE: enter webhook secret
+        
+        WE->>TF: setEnvironmentVariable(*production params*)
+        activate TF
+        TF-->>WE: webhook secret set
+        deactivate TF
     end
-
-    WE->>TF: setEnvironmentVariable(*params for prod*)
+    
+    WE->>TF: createSeparateTfvarsFiles(*projectName*, *terraformVars*)
     activate TF
-    TF-->>WE: production webhook secret set
-    deactivate TF
-    
-    WE->>Utils: writeJsonFile("terraform.tfvars.json", terraformVars)
+    TF->>Utils: writeJsonFile(*infrastructure path*, *infraVars*)
     activate Utils
-    Utils-->>WE: terraform variables updated
+    Utils-->>TF: infrastructure tfvars written
+    TF->>Utils: writeJsonFile(*cicd path*, *cicdVars*)
+    Utils-->>TF: CI/CD tfvars written
     deactivate Utils
-    
-   
+    TF-->>WE: separate terraform variable files created
+    deactivate TF

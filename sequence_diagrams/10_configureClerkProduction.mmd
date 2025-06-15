@@ -15,7 +15,7 @@ sequenceDiagram
     
     note right of User: Step 10: configureClerkProduction
     
-    alt multiEnv=true
+    alt multiEnv
         WE->>TF: getOutput("csp_deployment_urls", "infrastructure")
         activate TF
         TF->>TFExec: terraform output
@@ -53,6 +53,6 @@ sequenceDiagram
         TF-->>WE: terraform variables updated
         deactivate TF
         
-    else multiEnv=false
+    else single environment
         WE->>User: Single environment setup - step skipped
     end
