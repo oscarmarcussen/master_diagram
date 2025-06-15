@@ -1,0 +1,53 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    participant WE as WorkflowEngine
+    participant TF as TerraformCli
+    participant Git as GitCli
+    
+    box Remote Services
+    participant TFExec as Terraform<br>Executable
+    participant GHAPI as GitHub API
+    end
+
+    note right of WE: Step 12: establishCICD
+    
+    WE->>TF: apply("cicd")
+    activate TF
+    
+    TF->>TFExec: terraform init (cicd config)
+    activate TFExec
+    TFExec-->>TF: CI/CD configuration initialized
+    deactivate TFExec
+    
+    TF->>TFExec: terraform apply (cicd config)
+    activate TFExec
+    
+    note over TFExec: Reads infrastructure state outputs<br>via terraform_remote_state data source
+    
+    TFExec->>GHAPI: create environment configurations
+    activate GHAPI
+    note over GHAPI: • Production environment<br>• Staging environment (if multi-env)
+    GHAPI-->>TFExec: environments configured
+    deactivate GHAPI
+    
+    TFExec->>GHAPI: configure secrets and variables
+    activate GHAPI
+    note over GHAPI: • CSP authentication secrets<br>• Environment-specific variables<br>• Deployment URLs
+    GHAPI-->>TFExec: secrets and variables set
+    deactivate GHAPI
+    
+    TFExec->>GHAPI: create CI/CD workflow file
+    activate GHAPI
+    note over GHAPI: • GitHub Actions workflow<br>• CSP-specific deployment steps<br>• Multi-environment support
+    GHAPI-->>TFExec: workflow file created and committed
+    deactivate GHAPI
+    
+    TFExec-->>TF: CI/CD pipeline established
+    deactivate TFExec
+    
+    TF-->>WE: continuous deployment configured
+    deactivate TF

@@ -38,3 +38,36 @@ sequenceDiagram
     else single environment
         note over WE: Step skipped for single environment
     end
+
+    note right of User: Step 11: configureWebhooks
+    
+    WE->>TF: getOutput("csp_deployment_urls")
+    activate TF
+    TF->>TFExec: terraform output
+    TFExec-->>TF: deployment URLs
+    TF-->>WE: URLs retrieved
+    deactivate TF
+    
+    alt multiEnv
+        WE->>User: display endpoints + setup instructions<br>prompt for webhook secrets (prod & staging)
+        User-->>WE: enter webhook secrets for both environments
+        
+        WE->>TF: setEnvironmentVariable() × 2<br>(production + staging secrets)
+        activate TF
+        TF-->>WE: webhook secrets configured
+        deactivate TF
+        
+    else single environment
+        WE->>User: display endpoint + setup instructions<br>prompt for webhook secret
+        User-->>WE: enter webhook secret
+        
+        WE->>TF: setEnvironmentVariable()<br>(production secret)
+        activate TF
+        TF-->>WE: webhook secret configured
+        deactivate TF
+    end
+    
+    WE->>TF: createSeparateTfvarsFiles()
+    activate TF
+    TF-->>WE: terraform configurations updated
+    deactivate TF
