@@ -8,14 +8,12 @@ sequenceDiagram
     participant WE as WorkflowEngine
     participant TF as TerraformCli
     participant Utils
-    participant Git as GitCli
     
     box Remote Services
     participant TFExec as Terraform<br>Executable
-    participant GHAPI as GitHub API
     end
     
-    note right of User: Step 10: configureWebhooks
+    note right of User: Step 11: configureWebhooks
     WE->>TF: getOutput("csp_deployment_urls")
     activate TF
     TF->>TFExec: terraform output
@@ -47,14 +45,5 @@ sequenceDiagram
     activate Utils
     Utils-->>WE: terraform variables updated
     deactivate Utils
-    
-    WE->>Git: syncWithRemote("add webhook secrets")
-    activate Git
-    Git->>GHAPI: push changes
-    activate GHAPI
-    GHAPI-->>Git: changes pushed
-    deactivate GHAPI
-    Git-->>WE: changes synchronized
-    deactivate Git
     
    

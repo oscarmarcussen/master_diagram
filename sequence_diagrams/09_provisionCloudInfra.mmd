@@ -8,69 +8,36 @@ sequenceDiagram
     participant TF as TerraformCli
     
     box Remote Services
-    participant GCPCloud as Google Cloud<br>Platform
     participant AzureCloud as Microsoft<br>Azure
+    participant GCPCloud as Google Cloud<br>Platform
     participant TFExec as Terraform<br>Executable
     end
     
     note right of WE: Step 9: provisionCloudInfra
-    WE->>TF: init()
+    WE->>TF: apply("infrastructure")
     activate TF
-    TF->>TFExec: terraform init
+    TF->>TFExec: $ terraform init (infrastructure config)
     activate TFExec
-    TFExec-->>TF: Terraform initialized
+    TFExec-->>TF: Infrastructure config initialized
     deactivate TFExec
-    TF-->>WE: Terraform initialization complete
-    deactivate TF
     
-    alt GCP Selected
-        WE->>TF: apply("gcp")
-        activate TF
-        TF->>TFExec: terraform apply -target=module.gcp
-        activate TFExec
-        
-        TFExec->>GCPCloud: create project & enable APIs
-        GCPCloud-->>TFExec: project & APIs configured
-        
-        TFExec->>GCPCloud: setup IAM & Workload Identity Federation
-        GCPCloud-->>TFExec: authentication configured
-        
-        TFExec->>GCPCloud: create Cloud Run service
-        GCPCloud-->>TFExec: container service created
-        
-        alt Create Managed Database
-            TFExec->>GCPCloud: create CloudSQL instance
-            GCPCloud-->>TFExec: database instance created
-        end
-        
-        TFExec-->>TF: GCP resources provisioned
-        deactivate TFExec
-        TF-->>WE: GCP infrastructure provisioned
-        deactivate TF
-        
-    else Azure Selected
-        WE->>TF: apply("azure")
-        activate TF
-        TF->>TFExec: terraform apply -target=module.azure
-        activate TFExec
-        
-        TFExec->>AzureCloud: create resource group & container registry
-        AzureCloud-->>TFExec: resource group & registry created
-        
-        TFExec->>AzureCloud: setup service principal & OIDC federation
-        AzureCloud-->>TFExec: authentication configured
-        
-        TFExec->>AzureCloud: create Container Apps environment & service
-        AzureCloud-->>TFExec: container service created
-        
-        alt Create Managed Database
-            TFExec->>AzureCloud: create PostgreSQL Flexible Server
-            AzureCloud-->>TFExec: database instance created
-        end
-        
-        TFExec-->>TF: Azure resources provisioned
-        deactivate TFExec
-        TF-->>WE: Azure infrastructure provisioned
-        deactivate TF
-
+    TF->>TFExec: $ terraform apply (infrastructure config)
+    activate TFExec
+    
+    alt Azure Selected
+        TFExec->>AzureCloud: provision complete infrastructure
+        activate AzureCloud
+        note over AzureCloud: • Resource group & container registry<br>• Service principal & OIDC federation<br>• Container Apps environment & service<br>• PostgreSQL Flexible Server (optional)
+        AzureCloud-->>TFExec: all resources created
+        deactivate AzureCloud
+    else GCP Selected
+        TFExec->>GCPCloud: provision complete infrastructure
+        activate GCPCloud
+        note over GCPCloud: • Project creation & API enablement<br>• IAM & Workload Identity Federation<br>• Cloud Run service<br>• CloudSQL instance (optional)
+        GCPCloud-->>TFExec: all resources created
+        deactivate GCPCloud
     end
+    TFExec-->>TF: Infrastructure provisioned
+    deactivate TFExec
+    TF-->>WE: Infrastructure provisioning complete
+    deactivate TF

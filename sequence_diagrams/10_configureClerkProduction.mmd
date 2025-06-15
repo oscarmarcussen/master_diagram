@@ -1,0 +1,58 @@
+---
+config:
+  theme: default
+  look: classic
+---
+sequenceDiagram
+    actor User
+    participant WE as WorkflowEngine
+    participant TF as TerraformCli
+    participant Utils
+    
+    box Remote Services
+    participant TFExec as Terraform<br>Executable
+    end
+    
+    note right of User: Step 10: configureClerkProduction
+    
+    alt multiEnv=true
+        WE->>TF: getOutput("csp_deployment_urls", "infrastructure")
+        activate TF
+        TF->>TFExec: terraform output
+        activate TFExec
+        TFExec-->>TF: deployment URLs map
+        deactivate TFExec
+        TF-->>WE: production URL retrieved
+        deactivate TF
+        
+        WE->>User: display production URL and setup instructions
+        WE->>User: prompt for Clerk Secret Key (PRODUCTION)
+        User-->>WE: enter production secret key
+        
+        WE->>User: prompt for Clerk Publishable Key (PRODUCTION)
+        User-->>WE: enter production publishable key
+        
+        WE->>TF: setEnvironmentVariable(*params for secret key*)
+        activate TF
+        TF-->>WE: secret variable set
+        deactivate TF
+        
+        WE->>TF: setEnvironmentVariable(*params for public key*)
+        activate TF
+        TF-->>WE: public variable set
+        deactivate TF
+        
+        WE->>TF: createSeparateTfvarsFiles(*projectName*, *terraformVars*)
+        activate TF
+        TF->>Utils: writeJsonFile(*infrastructure path*, *infraVars*)
+        activate Utils
+        Utils-->>TF: infrastructure tfvars written
+        TF->>Utils: writeJsonFile(*cicd path*, *cicdVars*)
+        Utils-->>TF: CI/CD tfvars written
+        deactivate Utils
+        TF-->>WE: terraform variables updated
+        deactivate TF
+        
+    else multiEnv=false
+        WE->>User: Single environment setup - step skipped
+    end

@@ -16,7 +16,7 @@ sequenceDiagram
     activate WE
 
     loop for each step
-        WE->>WS: execute()
+        WE->>WS: execute(context)
         activate WS
         WS-->>WE: step completed
         deactivate WS
