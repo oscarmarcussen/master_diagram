@@ -7,14 +7,14 @@ sequenceDiagram
     participant WE as WorkflowEngine
     participant GH as GitHubCli
     participant CSP as CSPManager
-    participant Provider as CSP Provider
+    participant Provider as CSP<br>(GcloudCli, AzureCli)
     
     box Remote Services
     participant GHAPI as GitHub API
     participant CSPAPI as CSP API
     end
 
-    note right of WE: Step 2: verifyAccountAccess
+    note right of WE: Step 2: verifyAccountSetup
     
     WE->>GH: verifyAccountSetup()
     activate GH
